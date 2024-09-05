@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../store/userSlice';
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -18,6 +20,7 @@ export default function RegisterForm() {
   });
   const [error, setError] = useState('');
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +52,9 @@ export default function RegisterForm() {
       });
 
       if (res.ok) {
-        router.push('/login');
+        const userData = await res.json();
+        dispatch(setUser(userData));
+        router.push('/dashboard');
       } else {
         const data = await res.json();
         setError(data.message || 'An error occurred during registration');

@@ -12,7 +12,8 @@ export default function Header() {
             and advance your career.
           </p>
         </div>
-        <h1 className="text-black text-center text-4xl sm:text-9xl font-bold">
+
+        <h1 className="text-black text-center text-4xl sm:text-9xl font-semibold">
           Bridik for Growth
         </h1>
       </div>{" "}

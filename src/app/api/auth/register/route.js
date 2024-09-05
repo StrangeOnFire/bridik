@@ -1,12 +1,9 @@
-import dbConnect from '../../../lib/mongodb';
-import User from '../../../models/User';
+import dbConnect from '../../../../lib/mongodb';
+import User from '../../../../../models/User';
 import bcrypt from 'bcryptjs';
+import { NextResponse } from 'next/server';
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
+export async function POST(req) {
   await dbConnect();
 
   const { 
@@ -21,16 +18,16 @@ export default async function handler(req, res) {
     currentSkills, 
     careerGoals, 
     country 
-  } = req.body;
+  } = await req.json();
 
   if (!username || !email || !password || !fullName) {
-    return res.status(400).json({ message: 'Missing required fields' });
+    return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
   }
 
   try {
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return NextResponse.json({ message: 'User already exists' }, { status: 400 });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -48,9 +45,9 @@ export default async function handler(req, res) {
       country 
     });
 
-    res.status(201).json({ message: 'User created successfully', userId: user._id });
+    return NextResponse.json({ message: 'User created successfully', userId: user._id }, { status: 201 });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ message: 'An error occurred during registration' });
+    return NextResponse.json({ message: 'An error occurred during registration' }, { status: 500 });
   }
 }

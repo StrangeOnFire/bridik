@@ -2,10 +2,10 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import dbConnect from '../../../lib/mongodb';
-import User from '../../../models/User';
+import dbConnect from '../../../../lib/mongodb';
+import User from '../../../../../models/User';
 
-export default NextAuth({
+export const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
@@ -32,7 +32,7 @@ export default NextAuth({
 
         return {
           id: user._id,
-          name: user.fullName,
+          fullName: user.fullName,
           email: user.email,
           username: user.username,
           jobTitle: user.jobTitle,
@@ -78,4 +78,8 @@ export default NextAuth({
     signIn: '/login',
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };

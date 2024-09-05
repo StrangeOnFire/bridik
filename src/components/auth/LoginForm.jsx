@@ -1,19 +1,22 @@
-'use client'
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../store/userSlice";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
-
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
-    const result = await signIn('credentials', {
+    const result = await signIn("credentials", {
       redirect: false,
       email,
       password,
@@ -22,14 +25,53 @@ export default function LoginForm() {
     if (result.error) {
       setError(result.error);
     } else {
-      router.push('/dashboard');
+      // Fetch user data after successful login
+      try {
+        const res = await fetch("/api/user");
+        if (res.ok) {
+          const userData = await res.json();
+          dispatch(setUser(userData));
+          router.push("/dashboard");
+        } else {
+          setError("Failed to fetch user data");
+        }
+      } catch (err) {
+        setError("An unexpected error occurred");
+      }
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const result = await signIn("google", { redirect: false });
+    if (result.error) {
+      setError(result.error);
+    } else {
+      // Fetch user data after successful Google sign-in
+      try {
+        const res = await fetch("/api/user");
+        if (res.ok) {
+          const userData = await res.json();
+          dispatch(setUser(userData));
+          router.push("/dashboard");
+        } else {
+          setError("Failed to fetch user data");
+        }
+      } catch (err) {
+        setError("An unexpected error occurred");
+      }
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <h1>Welcome, {user?.fullName}!</h1>
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Email
+        </label>
         <input
           type="email"
           id="email"
@@ -40,7 +82,12 @@ export default function LoginForm() {
         />
       </div>
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Password
+        </label>
         <input
           type="password"
           id="password"
@@ -58,7 +105,7 @@ export default function LoginForm() {
         Log in
       </button>
       <button
-        onClick={() => signIn('google')}
+        onClick={handleGoogleSignIn}
         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
       >
         Continue with Google

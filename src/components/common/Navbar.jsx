@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
+import { useSelector } from "react-redux";
 
 const NavLink = ({ href, children, onClick }) => (
   <Link
@@ -17,6 +20,9 @@ const NavLink = ({ href, children, onClick }) => (
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const user = useSelector((state) => state.user);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -26,24 +32,48 @@ export default function Navbar() {
     setIsMenuOpen(false);
   };
 
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push("/"); // Redirect to home page after logout
+  };
+
   return (
     <nav className="glass-nav fixed left-0 right-0 top-0 z-[9999] mx-auto max-w-6xl overflow-hidden bg-[#ecefec] backdrop-blur md:left-6 md:right-6 md:top-6 md:rounded-2xl">
       <div className="glass-nav flex items-center justify-between px-5 py-4">
         <div className="hidden items-center gap-2 md:flex">
           <NavLink href="#">Products</NavLink>
-          <NavLink href="#">History</NavLink>
-          <NavLink href="#">Contact</NavLink>
+          <NavLink href="#">About</NavLink>
+          <NavLink href="#">Feedback</NavLink>
         </div>
         <span className="pointer-events-none relative left-0 top-[50%] z-10 text-4xl font-black text-black  md:absolute md:left-[50%] md:-translate-x-[50%] md:-translate-y-[50%]">
-          bridik
+          Bridik
         </span>
         <div className="flex items-center gap-4">
-          <div className="hidden md:block">
-            <NavLink href="#">Sign in</NavLink>
-          </div>
-          <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-indigo-600 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
-            Try free
-          </button>
+          {status === "authenticated" ? (
+            <>
+              <span className="hidden md:inline">
+                Welcome, {user.fullName || session.user.name}!
+              </span>
+              <button
+                onClick={handleLogout}
+                className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-red-600 from-40% to-red-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="hidden md:block">
+                <NavLink href="/login">Login</NavLink>
+              </div>
+              <button
+                onClick={() => router.push("/register")}
+                className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-indigo-600 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95"
+              >
+                Sign up
+              </button>
+            </>
+          )}
           <button
             onClick={toggleMenu}
             className="ml-2 block scale-100 text-3xl text-black/90 transition-all hover:scale-105 hover:text-black active:scale-95 md:hidden"
@@ -81,9 +111,15 @@ export default function Navbar() {
           <NavLink href="#" onClick={closeMenu}>
             Contact
           </NavLink>
-          <NavLink href="#" onClick={closeMenu}>
-            Sign in
-          </NavLink>
+          {status === "authenticated" ? (
+            <button onClick={handleLogout} className="text-red-600">
+              Logout
+            </button>
+          ) : (
+            <NavLink href="/login" onClick={closeMenu}>
+              Sign in
+            </NavLink>
+          )}
         </div>
       </div>
     </nav>

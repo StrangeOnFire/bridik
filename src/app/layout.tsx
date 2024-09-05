@@ -1,28 +1,30 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "../components/common/Navbar";
-const inter = Inter({ subsets: ["latin"] });
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import CombinedProviders from "../store/CombinedProviders";
 
-export const metadata: Metadata = {
-  title: "bridik",
+export const metadata = {
+  title: "Bridik",
   description:
     "Bridik.in is an AI-driven platform designed to help individuals enhance their skills and advance their careers. Discover personalized learning paths, access resources, and close skill gaps to achieve your professional goals.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  let session = null;
+  try {
+    session = await getServerSession(authOptions);
+  } catch (error) {
+    console.error("Error fetching session:", error);
+  }
+
   return (
     <html lang="en">
-      <body className="flex flex-col  min-h-screen">
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <footer className="bg-gray-800 text-white py-4 text-center">
-          © 2024 bridik.in
-        </footer>
+      <body className="flex flex-col min-h-screen">
+        <CombinedProviders session={session}>{children}</CombinedProviders>
       </body>
     </html>
   );
