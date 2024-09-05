@@ -6,7 +6,7 @@ import dbConnect from '../../../../lib/mongodb';
 import User from '../../../../../models/User';
 
 // The configuration for NextAuth
-export const authOptions = {
+const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
@@ -73,6 +73,9 @@ export const authOptions = {
       session.user.careerGoals = token.careerGoals;
       session.user.country = token.country;
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      return baseUrl; // or any other URL you want to redirect to
     },
   },
   pages: {
