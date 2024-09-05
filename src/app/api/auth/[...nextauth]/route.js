@@ -51,6 +51,7 @@ const authOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.fullName = user.fullName;
         token.username = user.username;
         token.jobTitle = user.jobTitle;
         token.industry = user.industry;
@@ -64,6 +65,7 @@ const authOptions = {
     },
     async session({ session, token }) {
       session.user.id = token.id;
+      session.user.fullName = token.fullName;
       session.user.username = token.username;
       session.user.jobTitle = token.jobTitle;
       session.user.industry = token.industry;

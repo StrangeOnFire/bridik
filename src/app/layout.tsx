@@ -1,6 +1,5 @@
 import "./globals.css";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import CombinedProviders from "../store/CombinedProviders";
 
 export const metadata = {
@@ -16,7 +15,7 @@ export default async function RootLayout({
 }) {
   let session = null;
   try {
-    session = await getServerSession(authOptions);
+    session = await getServerSession();
   } catch (error) {
     console.error("Error fetching session:", error);
   }
