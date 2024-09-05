@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import dbConnect from '../../../../lib/mongodb';
 import User from '../../../../../models/User';
 
+// The configuration for NextAuth
 export const authOptions = {
   providers: [
     GoogleProvider({
@@ -41,7 +42,7 @@ export const authOptions = {
           educationalBackground: user.educationalBackground,
           currentSkills: user.currentSkills,
           careerGoals: user.careerGoals,
-          country: user.country
+          country: user.country,
         };
       }
     })
@@ -80,6 +81,8 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
+// Set up the NextAuth handler for the API routes
 const handler = NextAuth(authOptions);
 
+// Export the handler for both GET and POST requests
 export { handler as GET, handler as POST };
