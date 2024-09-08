@@ -21,7 +21,8 @@ const initialState = {
   image: null,
   createdAt: null,
   updatedAt: null,
-  isLoggedIn: false
+  isLoggedIn: false,
+  analysisResult: null
 };
 
 const userSlice = createSlice({
@@ -34,9 +35,12 @@ const userSlice = createSlice({
     clearUser: () => initialState,
     updateUser: (state, action) => {
       return { ...state, ...action.payload };
+    },
+    setAnalysisResult: (state, action) => {
+      state.analysisResult = action.payload;
     }
   }
 });
 
-export const { setUser, clearUser, updateUser } = userSlice.actions;
+export const { setUser, clearUser, updateUser, setAnalysisResult } = userSlice.actions;
 export default userSlice.reducer;

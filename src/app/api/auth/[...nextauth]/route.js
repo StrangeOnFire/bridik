@@ -19,31 +19,36 @@ const authOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        await dbConnect();
+        try {
+          await dbConnect();
 
-        const user = await User.findOne({ email: credentials.email });
-        if (!user) {
-          throw new Error('No user found with this email');
+          const user = await User.findOne({ email: credentials.email });
+          if (!user) {
+            throw new Error('No user found with this email');
+          }
+
+          const isValid = await bcrypt.compare(credentials.password, user.password);
+          if (!isValid) {
+            throw new Error('Invalid password');
+          }
+
+          return {
+            id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+            username: user.username,
+            jobTitle: user.jobTitle,
+            industry: user.industry,
+            yearsOfExperience: user.yearsOfExperience,
+            educationalBackground: user.educationalBackground,
+            currentSkills: user.currentSkills,
+            careerGoals: user.careerGoals,
+            country: user.country,
+          };
+        } catch (error) {
+          console.error('Error in authorize function:', error);
+          throw new Error('Internal server error');
         }
-
-        const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) {
-          throw new Error('Invalid password');
-        }
-
-        return {
-          id: user._id,
-          fullName: user.fullName,
-          email: user.email,
-          username: user.username,
-          jobTitle: user.jobTitle,
-          industry: user.industry,
-          yearsOfExperience: user.yearsOfExperience,
-          educationalBackground: user.educationalBackground,
-          currentSkills: user.currentSkills,
-          careerGoals: user.careerGoals,
-          country: user.country,
-        };
       }
     })
   ],
@@ -77,7 +82,7 @@ const authOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      return baseUrl; // or any other URL you want to redirect to
+      return baseUrl + "/dashboard"; // or any other URL you want to redirect to
     },
   },
   pages: {

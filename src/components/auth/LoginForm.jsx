@@ -15,15 +15,13 @@ export default function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     const result = await signIn("credentials", {
       redirect: false,
       email,
       password,
     });
-
     if (result.error) {
-      setError(result.error);
+      setError(result.error); 
     } else {
       // Fetch user data after successful login
       try {
