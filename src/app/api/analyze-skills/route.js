@@ -45,7 +45,7 @@ export async function POST(req) {
       4. Actionable steps for each goal.
       5. Industry-specific recommendations based on current job and industry.
       6. Career progression path based on current job title and experience.
-      7. Recommended courses or certifications based on educational background and career goals.
+      7. Recommended courses or certifications based on educational background and career goals with the course name, provider,link and a short description.
       
       Respond with a JSON format as:
       {

@@ -88,11 +88,7 @@ export default function ProfilePage() {
           <p>{analysisResult.careerProgressionPath}</p>
 
           <h3 className="mt-4 font-semibold">Recommended Courses or Certifications:</h3>
-          <ul>
-            {analysisResult.recommendedCoursesOrCertifications.map((course, index) => (
-              <li key={index}>{course.courseName} by {course.provider}</li>
-            ))}
-          </ul>
+         
         </div>
       )}
     </div>

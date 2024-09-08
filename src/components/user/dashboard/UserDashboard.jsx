@@ -1,47 +1,45 @@
-
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
-} from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { BookOpen, MapPin } from "lucide-react"
-
-
-
-export default function UserDashboard({user}) {
+  CardTitle,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { BookOpen, MapPin, ExternalLink } from "lucide-react";
+import RetroGrid from "@/components/ui/RetroGrid";
+import Image from "next/image";
+import ImprovedSkillDevelopmentPlan from "./ImprovedSkillDevelopmentPlan";
+import { GridPatternBoxes } from "./GridPatternBoxes";
+import CareerProgressionPath from "./CareerProgressionPath";
+// ---------------------------------------------------------------------------------
+export default function UserDashboard({ user }) {
   return (
-    <div className="container mx-auto p-4 space-y-6">
-      <Card>
+    <div className="container mx-auto sm:p-4 space-y-6">
+      <Card className="relative ">
+        <RetroGrid />
         <CardHeader>
           <div className="flex items-center space-x-4">
-            <Avatar className="w-20 h-20">
-              <AvatarImage
-                src={user?.image || "/placeholder.svg"}
-                alt={user?.fullName}
-              />
+            <Avatar className="w-16 h-16 sm:w-20 sm:h-20">
+              <AvatarImage src={user?.image || ""} alt={user?.fullName} />
               <AvatarFallback>
                 {user?.fullName
                   ?.split(" ")
-                  ?.map(n => n[0])
+                  ?.map((n) => n[0])
                   ?.join("")}
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-2xl">{user.fullName}</CardTitle>
-              <CardDescription>
-                {user?.jobTitle === "none"
-                  ? "Aspiring Developer"
-                  : user?.jobTitle}{" "}
-                | {user?.industry}
+              <CardTitle className="text-2xl ">{user.fullName}</CardTitle>
+              <CardDescription className="">
+                {user?.jobTitle === "none" ? "Open to work" : user?.jobTitle} |{" "}
+                {user?.industry}
               </CardDescription>
               <div className="flex items-center mt-1">
-                <MapPin className="w-4 h-4 mr-1" />
+                <MapPin className="w-4 h-4 mr-1" color="green" />
                 <span className="text-sm text-muted-foreground">
                   {user.country}
                 </span>
@@ -49,7 +47,7 @@ export default function UserDashboard({user}) {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <h3 className="font-semibold mb-2">Professional Info</h3>
@@ -69,32 +67,60 @@ export default function UserDashboard({user}) {
             </div>
           </div>
         </CardContent>
+
+        <Image
+          src="https://firebasestorage.googleapis.com/v0/b/parts-1ffae.appspot.com/o/icons%2Fmocking.png?alt=media&token=dbfff331-e003-4264-97ff-be4fe8558cc8"
+          alt={"mocking person"}
+          className="absolute -bottom-4 right-4 z-0 opacity-0 sm:opacity-100"
+          width={100}
+          height={100}
+        />
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+        {/* Current Skills */}
+        <Card className="mt-0 w-full min-h-[150px] h-full relative z-10  bg-gradient-to-b dark:from-neutral-900 from-white dark:to-neutral-950 to-white overflow-hidden">
           <CardHeader>
-            <CardTitle>Current Skills</CardTitle>
+            <CardTitle className="flex items-center gap-2 ">
+              Current Skills
+              <Image
+                src="https://firebasestorage.googleapis.com/v0/b/parts-1ffae.appspot.com/o/icons%2Flight-bulb%20(1).png?alt=media&token=3483aefb-a3c2-4006-8305-1dd3756a07c9"
+                alt="skills"
+                width={20}
+                height={20}
+              />
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 monstre">
               {user?.currentSkills?.map((skill, index) => (
-                <Badge key={index} variant="secondary">
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="bg-black/5 text-black flex items-center gap-2 px-2 py-1"
+                >
+                  <div className="w-1 h-1 rounded-full bg-black"></div>
                   {skill}
                 </Badge>
               ))}
             </div>
           </CardContent>
+          <GridPatternBoxes />
         </Card>
 
+        {/* Career Progress */}
         <Card>
           <CardHeader>
-            <CardTitle>Career Readiness</CardTitle>
+            <CardTitle className="">Career Progress</CardTitle>
+            <CardDescription>
+              How close you are to achieving your short-term and long-term
+              career goals
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <div className="flex justify-between mb-1">
-                <span>Short-term Goal Readiness</span>
+                <span>Short-term Goal: {user?.careerGoals?.shortTerm}</span>
                 <span>{user?.analysisResult?.shortTermReadiness}%</span>
               </div>
               <Progress
@@ -104,7 +130,7 @@ export default function UserDashboard({user}) {
             </div>
             <div>
               <div className="flex justify-between mb-1">
-                <span>Long-term Goal Readiness</span>
+                <span>Long-term Goal: {user?.careerGoals?.longTerm}</span>
                 <span>{user?.analysisResult?.longTermReadiness}%</span>
               </div>
               <Progress
@@ -116,79 +142,92 @@ export default function UserDashboard({user}) {
         </Card>
       </div>
 
+      <ImprovedSkillDevelopmentPlan user={user} />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {" "}
+        {/* Industry Insights */}
+        <Card className="relative z-10 p-6 rounded-3xl overflow-hidden bg-white/20">
+          <CardHeader>
+            <CardTitle className="text-2xl   font-bold  flex items-center  gap-2  ">
+              Industry Insights{" "}
+              <Image
+                src="https://firebasestorage.googleapis.com/v0/b/parts-1ffae.appspot.com/o/icons%2Fweather-alert.png?alt=media&token=4504efaf-d5c3-4b41-8d6a-36c5bc2db81e"
+                alt="skills"
+                width={100}
+                height={100}
+              />
+            </CardTitle>
+            <CardDescription className="text-black">
+              Customized Advice from Bridik on how to improve your skills and
+              progress in your career !
+            </CardDescription>
+          </CardHeader>
+          <Separator />
+          <CardContent className="text-black font-[500] ">
+            <p>{user?.analysisResult?.industryRecommendations}</p>
+          </CardContent>
+          <GridPatternBoxes />
+        </Card>
+        <CareerProgressionPath user={user} />
+      </div>
+      {/* Recommended Learning */}
       <Card>
         <CardHeader>
-          <CardTitle>Skill Development Plan</CardTitle>
+          <CardTitle className="flex items-center gap-2 text-xl font-bold">
+            Recommended Learning
+            <Image
+              src="https://firebasestorage.googleapis.com/v0/b/parts-1ffae.appspot.com/o/icons%2Fidea%20(1).png?alt=media&token=463b96c9-a7d7-4547-ba0f-f2460ceefaca"
+              alt="skills"
+              width={100}
+              height={100}
+              className="w-10 h-10 sm:w-16 sm:h-16"
+            />
+          </CardTitle>
+          <CardDescription>
+            Courses and certifications that are recommended for you to improve
+            your skills and progress in your career
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="font-semibold mb-2">Short-term Focus</h3>
-              <ul className="list-disc list-inside space-y-1">
-                {user?.analysisResult?.skillsForShortTerm?.map((skill, index) => (
-                  <li key={index}>{skill}</li>
-                ))}
-              </ul>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {user?.analysisResult?.stepsForShortTerm}
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Long-term Focus</h3>
-              <ul className="list-disc list-inside space-y-1">
-                {user?.analysisResult?.skillsForLongTerm?.map((skill, index) => (
-                  <li key={index}>{skill}</li>
-                ))}
-              </ul>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {user?.analysisResult?.stepsForLongTerm}
-              </p>
-            </div>
-          </div>
+          <ul className="space-y-4">
+            {user?.analysisResult?.recommendedCoursesOrCertifications?.map(
+              (course, index) => (
+                <li
+                  key={index}
+                  className="bg-white/50 rounded-lg p-4 shadow-sm transition-shadow duration-300"
+                >
+                  <div className="flex items-start space-x-4">
+                    <BookOpen className="flex-shrink-0 h-6 w-6 text-primary mt-1" />
+                    <div className="flex-grow">
+                      <h3 className="font-semibold text-lg mb-1">
+                        {course.courseName}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        {course.provider}
+                      </p>
+                      <p className="text-sm text-gray-600 mb-3">
+                        {course.description}
+                      </p>
+                      <button
+                        onClick={() => window.open(course.link, "_blank")}
+                        className="text-white font-[500] text-sm bg-primary/60 hover:bg-primary/80 px-4 py-2 rounded-full transition-colors duration-300 flex items-center gap-2"
+                      >
+                        View Course <ExternalLink className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              )
+            )}
+          </ul>
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Industry Insights</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>{user?.analysisResult?.industryRecommendations}</p>
-            <Separator className="my-4" />
-            <h3 className="font-semibold mb-2">Career Progression Path</h3>
-            <p>{user?.analysisResult?.careerProgressionPath}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Recommended Learning</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {user?.analysisResult?.recommendedCoursesOrCertifications?.map(
-                (course, index) => (
-                  <li key={index} className="flex items-center">
-                    <BookOpen className="mr-2 h-4 w-4 text-primary" />
-                    <div>
-                      <p className="font-medium">{course.courseName}</p>
-                      <p className="text-sm text-muted-foreground">
-                        Provider: {course.provider}
-                      </p>
-                    </div>
-                  </li>
-                )
-              )}
-            </ul>
-          </CardContent>
-        </Card>
-      </div>
-
       <div className="text-sm text-muted-foreground text-right">
         Last updated:{" "}
-            {new Date(user?.analysisResult?.lastUpdated).toLocaleDateString()}
+        {new Date(user?.analysisResult?.lastUpdated).toLocaleDateString()}
       </div>
     </div>
-  )
+  );
 }
