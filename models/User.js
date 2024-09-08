@@ -10,7 +10,7 @@ const AnalysisResultSchema = new mongoose.Schema(
     stepsForLongTerm: String,
     industryRecommendations: String,
     careerProgressionPath: String,
-    recommendedCoursesOrCertifications: [String],
+    recommendedCoursesOrCertifications: [],
     lastUpdated: Date,
   },
   { _id: false }

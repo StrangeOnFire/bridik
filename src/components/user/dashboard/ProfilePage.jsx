@@ -12,6 +12,7 @@ export default function ProfilePage() {
   const user = useSelector((state) => state.user);
   useEffect(() => {
     setAnalysisResults(user?.analysisResult || null);
+    console.log(user)
   }, [user]);
 
   const handleAnalyzeSkills = async () => {
