@@ -37,12 +37,10 @@ function Banner() {
           <div className=" flex relative group py-2 px-4 h-1/2 max-h-[90px] m-auto  cursor-pointer text-xl font-[500] border items-center overflow-hidden justify-center  rounded-3xl box-border gap-4 z-10">
             <div className="h-full max-h-[90px] overflow-hidden transition-all">
               <p className=" transition-all group-hover:translate-x-[10%] group-hover:translate-y-[-100%]">
-                {" "}
                 Go to Profile
               </p>
               <p className="transition-all translate-x-[10%] translate-y-[10%] group-hover:translate-x-[0%] group-hover:translate-y-[-100%]">
-                {" "}
-                Don't be shy
+                Don&apos;t be shy
               </p>
             </div>
 
