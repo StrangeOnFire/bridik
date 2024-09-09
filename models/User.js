@@ -6,12 +6,12 @@ const AnalysisResultSchema = new mongoose.Schema(
     skillsForLongTerm: [String],
     shortTermReadiness: Number,
     longTermReadiness: Number,
-    stepsForShortTerm: String,
-    stepsForLongTerm: String,
+    stepsForShortTerm: [],
+    stepsForLongTerm: [],
     industryRecommendations: String,
-    careerProgressionPath: String,
+    careerProgressionPath: [],
     recommendedCoursesOrCertifications: [],
-    lastUpdated: Date,
+    lastUpdated: { type: Date, default: Date.now },
   },
   { _id: false }
 );

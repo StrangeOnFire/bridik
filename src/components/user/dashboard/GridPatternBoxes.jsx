@@ -1,19 +1,25 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useId } from "react";
 
-
+// Add this function at the top of the file
+function seededRandom(seed) {
+  const x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+}
 
 export const GridPatternBoxes = ({
   pattern,
-  size
+  size,
+  seed = 123 // Add a seed prop with a default value
 }) => {
-  const p = pattern ?? [
-    [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
-    [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
-    [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
-    [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
-    [Math.floor(Math.random() * 4) + 7, Math.floor(Math.random() * 6) + 1],
-  ];
+  const p = useMemo(() => {
+    if (pattern) return pattern;
+    return Array.from({ length: 5 }, (_, i) => [
+      Math.floor(seededRandom(seed + i * 2) * 4) + 7,
+      Math.floor(seededRandom(seed + i * 2 + 1) * 6) + 1
+    ]);
+  }, [pattern, seed]);
+
   return (
     (<div
       className="pointer-events-none absolute left-1/2 top-0  -ml-20 -mt-2 h-full w-full [mask-image:linear-gradient(white,transparent)]">
@@ -31,7 +37,7 @@ export const GridPatternBoxes = ({
   );
 };
 
- function GridPattern({
+function GridPattern({
   width,
   height,
   x,
@@ -57,10 +63,10 @@ export const GridPatternBoxes = ({
       <rect width="100%" height="100%" strokeWidth={0} fill={`url(#${patternId})`} />
       {squares && (
         <svg x={x} y={y} className="overflow-visible">
-          {squares.map(([x, y]) => (
+          {squares.map(([x, y],idx) => (
             <rect
               strokeWidth="0"
-              key={`${x}-${y}`}
+              key={idx}
               width={width + 1}
               height={height + 1}
               x={x * width}

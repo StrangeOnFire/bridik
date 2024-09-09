@@ -53,10 +53,10 @@ export async function POST(req) {
         "skillsForLongTerm": [...],
         "shortTermReadiness": 0-100,
         "longTermReadiness": 0-100,
-        "stepsForShortTerm": "...",
-        "stepsForLongTerm": "...",
+        "stepsForShortTerm": [...],
+        "stepsForLongTerm": [...],
         "industryRecommendations": "...",
-        "careerProgressionPath": "...",
+        "careerProgressionPath": [...],
         "recommendedCoursesOrCertifications": [...]
       }
     `;

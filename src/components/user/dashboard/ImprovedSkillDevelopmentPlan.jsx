@@ -13,7 +13,7 @@ import Image from "next/image";
 
 export default function ImprovedSkillDevelopmentPlan({ user }) {
   return (
-    <Card className="w-full">
+    <Card className="w-full ">
       <CardHeader>
         <CardTitle className="text-xl sm:text-2xl font-bold flex items-center gap-4 ">
           Skill Development Plan
@@ -36,7 +36,7 @@ export default function ImprovedSkillDevelopmentPlan({ user }) {
             <div className="space-y-4">
               <div className="grid gap-4 mt-4">
                 <Card className="!shadow-none border-black/20">
-                  <CardHeader>
+                  <CardHeader className="mb-4 mt-2 sm:mt-0 sm:mb-0">
                     <CardTitle className="text-base text-green-600 flex items-center ">
                       <Target className="inline mr-2 h-5 w-5 " />
                       Focus Skills
@@ -48,7 +48,7 @@ export default function ImprovedSkillDevelopmentPlan({ user }) {
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
-                      {user?.analysisResult?.skillsForShortTerm.map(
+                      {user?.analysisResult?.skillsForShortTerm?.map(
                         (skill, index) => (
                           <Badge key={index} variant="secondary">
                             {skill}
@@ -59,7 +59,7 @@ export default function ImprovedSkillDevelopmentPlan({ user }) {
                   </CardContent>
                 </Card>
                 <Card className="!shadow-none border-black/20">
-                  <CardHeader>
+                  <CardHeader className="mb-4 mt-2 sm:mt-0 sm:mb-0">
                     <CardTitle className="text-base text-green-600 flex items-center ">
                       <TrendingUp className="inline mr-2 h-5 w-5 " />
                       Action Steps
@@ -72,8 +72,7 @@ export default function ImprovedSkillDevelopmentPlan({ user }) {
                   <CardContent>
                     <ol className="list-decimal list-inside space-y-2">
                       {user?.analysisResult?.stepsForShortTerm
-                        .split(". ")
-                        .map((step, index) => (
+                        ?.map((step, index) => (
                           <li key={index} className="text-sm">
                             {step}
                           </li>
@@ -88,7 +87,7 @@ export default function ImprovedSkillDevelopmentPlan({ user }) {
             <div className="space-y-4">
               <div className="grid gap-4 mt-4">
                 <Card className="!shadow-none border-black/20">
-                  <CardHeader>
+                  <CardHeader className="mb-4 mt-2 sm:mt-0 sm:mb-0">
                     <CardTitle className="text-base text-green-600 flex items-center ">
                       <BookOpen className="inline mr-2 h-5 w-5 " />
                       Skills to Develop
@@ -100,7 +99,7 @@ export default function ImprovedSkillDevelopmentPlan({ user }) {
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
-                      {user?.analysisResult?.skillsForLongTerm.map(
+                      {user?.analysisResult?.skillsForLongTerm?.map(
                         (skill, index) => (
                           <Badge key={index} variant="secondary">
                             {skill}
@@ -111,7 +110,7 @@ export default function ImprovedSkillDevelopmentPlan({ user }) {
                   </CardContent>
                 </Card>
                 <Card className="!shadow-none border-black/20">
-                  <CardHeader>
+                  <CardHeader className="mb-4 mt-2 sm:mt-0 sm:mb-0">
                     <CardTitle className="text-base text-green-600 flex items-center ">
                       <ArrowRight className="inline mr-2 h-5 w-5 " />
                       Long-term Strategy
@@ -124,8 +123,7 @@ export default function ImprovedSkillDevelopmentPlan({ user }) {
                   <CardContent>
                     <ol className="list-decimal list-inside space-y-2">
                       {user?.analysisResult?.stepsForLongTerm
-                        .split(". ")
-                        .map((step, index) => (
+                        ?.map((step, index) => (
                           <li key={index} className="text-sm">
                             {step}
                           </li>

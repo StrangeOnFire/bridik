@@ -1,100 +1,57 @@
 "use client";
+import React from "react";
+import { useSelector } from "react-redux";
+import UserDashboard from "@/components/user/dashboard/UserDashboard";
+import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-import { useState, useEffect,  } from "react";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { setAnalysisResult } from '../../store/userSlice';
-
-export default function DashboardPage() {
-  const dispatch = useDispatch();
-  const [analysisResult, setAnalysisResults] = useState(null);
-  const [loading, setLoading] = useState(false);
+export default function Page() {
   const user = useSelector((state) => state.user);
-  useEffect(() => {
-    setAnalysisResults(user?.analysisResult || null);
-    console.log(user)
-  }, [user]);
-
-  const handleAnalyzeSkills = async () => {
-    if (!user) return;
-
-    setLoading(true);
-    console.log("Sending request to analyze-skills",{
-        currentSkills: user.currentSkills,
-        careerGoals: user.careerGoals,
-        jobTitle: user.jobTitle,
-        industry: user.industry,
-        yearsOfExperience: user.yearsOfExperience,
-        educationalBackground: user.educationalBackground,
-      });
-    try {
-      const response = await axios.post("/api/analyze-skills", {
-        currentSkills: user.currentSkills,
-        careerGoals: user.careerGoals,
-        jobTitle: user.jobTitle,
-        industry: user.industry,
-        yearsOfExperience: user.yearsOfExperience,
-        educationalBackground: user.educationalBackground,
-      });
-      dispatch(setAnalysisResult(response.data));
-      setAnalysisResults(response.data);
-    } catch (error) {
-      console.error("Error fetching AI suggestions", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-4">Your Profile</h1>
+    <div className="p-2 md:p-10 rounded-tl-2xl relative h-screen overflow-y-scroll border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full ">
+      <h1 className="text-2xl font-bold mt-4 sm:mt-0">Hi, Welcome back👋</h1>
+      <p className="text-sm sm:text-base text-neutral-500 mb-4 sm:mb-0">
+        Unlock your potential and boost your career.
+      </p>
+      <Banner />
+      <UserDashboard user={user} />
+    </div>
+  );
+}
 
-      <button
-        onClick={handleAnalyzeSkills}
-        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-        disabled={loading || !user}
+function Banner() {
+  const router = useRouter();
+  return (
+    <div className="relative mb-4 sm:mb-0 bg-gradient-to-r from-green-700 to-lime-600  px-6 py-4  sm:px-3.5 text-white rounded-lg flex justify-around items-center flex-col sm:flex-row">
+      <p className="text-sm font-semibold leading-6 ">
+        Want to Analyze again or update your info?
+      </p>
+
+      <div
+        className=" w-fit h-[45px] overflow-hidden"
+        onClick={() => {
+          router.push("/dashboard/profile");
+        }}
       >
-        {loading ? "Analyzing..." : "Analyze Skills"}
-      </button>
+        <div className="h-[90px] overflow-hidden">
+          <div className=" flex relative group py-2 px-4 h-1/2 max-h-[90px] m-auto  cursor-pointer text-xl font-[500] border items-center overflow-hidden justify-center  rounded-3xl box-border gap-4 z-10">
+            <div className="h-full max-h-[90px] overflow-hidden transition-all">
+              <p className=" transition-all group-hover:translate-x-[10%] group-hover:translate-y-[-100%]">
+                {" "}
+                Go to Profile
+              </p>
+              <p className="transition-all translate-x-[10%] translate-y-[10%] group-hover:translate-x-[0%] group-hover:translate-y-[-100%]">
+                {" "}
+                Don't be shy
+              </p>
+            </div>
 
-      {analysisResult && (
-        <div className="mt-6">
-          <p>
-            Skills required for short-term goal:{" "}
-            {analysisResult.skillsForShortTerm.join(", ")}
-          </p>
-          <p>
-            Skills required for long-term goal:{" "}
-            {analysisResult.skillsForLongTerm.join(", ")}
-          </p>
-          <h2 className="text-xl font-bold">Skill Readiness</h2>
-        <p>short term readiness: {analysisResult.shortTermReadiness}</p>
-        <p>long term readiness: {analysisResult.longTermReadiness}</p>
-
-          <h3 className="mt-4 font-semibold">
-            Actionable Steps for Short-Term:
-          </h3>
-          <p>{analysisResult.stepsForShortTerm}</p>
-
-          <h3 className="mt-4 font-semibold">
-            Actionable Steps for Long-Term:
-          </h3>
-          <p>{analysisResult.stepsForLongTerm}</p>
-
-          <h3 className="mt-4 font-semibold">Industry Recommendations:</h3>
-          <p>{analysisResult.industryRecommendations}</p>
-
-          <h3 className="mt-4 font-semibold">Career Progression Path:</h3>
-          <p>{analysisResult.careerProgressionPath}</p>
-
-          <h3 className="mt-4 font-semibold">Recommended Courses or Certifications:</h3>
-          <ul>
-            {analysisResult.recommendedCoursesOrCertifications.map((course, index) => (
-              <li key={index}>{course.courseName} by {course.provider}</li>
-            ))}
-          </ul>
+            <span className=" group-hover:scale-150 rounded-full bg-black flex w-5 h-5 justify-center items-center transition-all text-white">
+              <ArrowRight className="transition-all group-hover:translate-x-0 scale-0 group-hover:scale-90  translate-x-[-110%] " />
+            </span>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

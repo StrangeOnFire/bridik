@@ -3,7 +3,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser } from "@/store/userSlice";
 
 const NavLink = ({ href, children, onClick }) => (
   <Link
@@ -23,7 +24,7 @@ export default function Navbar() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const user = useSelector((state) => state.user);
-
+  const dispatch = useDispatch();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -34,6 +35,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
+    dispatch(clearUser());
     router.push("/"); // Redirect to home page after logout
   };
 

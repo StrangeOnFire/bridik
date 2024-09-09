@@ -3,8 +3,12 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { IconArrowLeft, IconMenu2, IconX } from "@tabler/icons-react";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { clearUser } from "@/store/userSlice";
 
 const SidebarContext = createContext(undefined);
 
@@ -149,5 +153,36 @@ export const SidebarLink = ({ link, className, ...props }) => {
         {link.label}
       </motion.span>
     </Link>
+  );
+};
+export const SidebarLogout = ({  className, ...props }) => {
+  const { open, animate } = useSidebar();
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    dispatch(clearUser());
+    router.push("/"); // Redirect to home page after logout
+  };
+  return (
+    <div
+      onClick={handleLogout}
+      className={cn(
+        "flex items-center justify-start gap-2  group/sidebar py-2 cursor-pointer",
+        className
+      )}
+      {...props}
+    >
+      <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      <motion.span
+        animate={{
+          display: animate ? (open ? "inline-block" : "none") : "inline-block",
+          opacity: animate ? (open ? 1 : 0) : 1,
+        }}
+        className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+      >
+       Logout
+      </motion.span>
+    </div>
   );
 };

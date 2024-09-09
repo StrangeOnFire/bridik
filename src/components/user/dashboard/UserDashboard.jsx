@@ -21,7 +21,7 @@ export default function UserDashboard({ user }) {
     <div className="container mx-auto sm:p-4 space-y-6">
       <Card className="relative ">
         <RetroGrid />
-        <CardHeader>
+        <CardHeader className="my-4 sm:my-0">
           <div className="flex items-center space-x-4">
             <Avatar className="w-16 h-16 sm:w-20 sm:h-20">
               <AvatarImage src={user?.image || ""} alt={user?.fullName} />
@@ -47,7 +47,7 @@ export default function UserDashboard({ user }) {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="relative z-10">
+        <CardContent className="relative z-10 mb-4 sm:mb-0">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <h3 className="font-semibold mb-2">Professional Info</h3>
@@ -80,8 +80,8 @@ export default function UserDashboard({ user }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
         {/* Current Skills */}
         <Card className="mt-0 w-full min-h-[150px] h-full relative z-10  bg-gradient-to-b dark:from-neutral-900 from-white dark:to-neutral-950 to-white overflow-hidden">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 ">
+          <CardHeader className="mb-4 mt-2 sm:mt-0 sm:mb-0">
+            <CardTitle className="flex items-center gap-2 border-b  pb-2 ">
               Current Skills
               <Image
                 src="https://firebasestorage.googleapis.com/v0/b/parts-1ffae.appspot.com/o/icons%2Flight-bulb%20(1).png?alt=media&token=3483aefb-a3c2-4006-8305-1dd3756a07c9"
@@ -109,9 +109,9 @@ export default function UserDashboard({ user }) {
         </Card>
 
         {/* Career Progress */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="">Career Progress</CardTitle>
+        <Card className="relative z-10 overflow-hidden pb-2 sm:pb-0">
+          <CardHeader className="mb-4 mt-2 sm:mt-0 sm:mb-0">
+            <CardTitle className="">Career Progress %</CardTitle>
             <CardDescription>
               How close you are to achieving your short-term and long-term
               career goals
@@ -139,6 +139,7 @@ export default function UserDashboard({ user }) {
               />
             </div>
           </CardContent>
+          <GridPatternBoxes />
         </Card>
       </div>
 
@@ -148,7 +149,7 @@ export default function UserDashboard({ user }) {
         {" "}
         {/* Industry Insights */}
         <Card className="relative z-10 p-6 rounded-3xl overflow-hidden bg-white/20">
-          <CardHeader>
+          <CardHeader >
             <CardTitle className="text-2xl   font-bold  flex items-center  gap-2  ">
               Industry Insights{" "}
               <Image
@@ -158,12 +159,12 @@ export default function UserDashboard({ user }) {
                 height={100}
               />
             </CardTitle>
-            <CardDescription className="text-black">
+            <CardDescription className="text-black ">
               Customized Advice from Bridik on how to improve your skills and
               progress in your career !
             </CardDescription>
           </CardHeader>
-          <Separator />
+          <Separator className="mb-4 sm:mb-0" />
           <CardContent className="text-black font-[500] ">
             <p>{user?.analysisResult?.industryRecommendations}</p>
           </CardContent>
