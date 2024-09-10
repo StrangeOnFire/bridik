@@ -1,12 +1,21 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import UserDashboard from "@/components/user/dashboard/UserDashboard";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-
+import Loading from "./loading";
 export default function Page() {
   const user = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div className="p-2 md:p-10 rounded-tl-2xl relative h-screen overflow-y-scroll border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full ">
       <h1 className="text-2xl font-bold mt-4 sm:mt-0">Hi, Welcome back👋</h1>
@@ -28,7 +37,7 @@ function Banner() {
       </p>
 
       <div
-        className=" w-fit h-[45px] overflow-hidden"
+        className=" w-fit h-[45px] ml-auto sm:ml-0 scale-75 sm:scale-90 overflow-hidden"
         onClick={() => {
           router.push("/dashboard/profile");
         }}

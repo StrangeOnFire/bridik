@@ -17,7 +17,12 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useDispatch, useSelector } from "react-redux";
+import { setAnalysisResult } from "@/store/userSlice";
+import Loading from "./loading";
+import axios from "axios";
+
+// ---------------------------------------------------------------------------------
 export default function UserSidebar({ children }) {
   const router = useRouter();
   const links = [
@@ -44,12 +49,43 @@ export default function UserSidebar({ children }) {
     },
   ];
   const [open, setOpen] = useState(false);
-  const { data: session, status } = useSession();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const user = useSelector((state) => state.user);
+
+  const handleAnalyzeSkills = async () => {
+    if (!user) return;
+
+    setLoading(true);
+
+    try {
+      const response = await axios.post("/api/analyze-skills", {
+        currentSkills: user.currentSkills,
+        careerGoals: user.careerGoals,
+        jobTitle: user.jobTitle,
+        industry: user.industry,
+        yearsOfExperience: user.yearsOfExperience,
+        educationalBackground: user.educationalBackground,
+      });
+      dispatch(setAnalysisResult(response.data));
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching AI suggestions", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    if (!session) {
+    if (!user?.loggedIn === false) {
       router.push("/");
     }
-  }, []);
+    if (user?.analysisResult === null && user?.currentSkills?.length > 0) {
+      setTimeout(() => {
+        handleAnalyzeSkills();
+      }, 1000);
+    }
+  }, [user]);
 
   return (
     <div
@@ -89,6 +125,7 @@ export default function UserSidebar({ children }) {
         </SidebarBody>
       </Sidebar>
       <div className="w-full h-screen min-h-screen overflow-y-auto">
+        {loading && <Loading />}
         {children}
       </div>
     </div>

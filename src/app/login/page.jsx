@@ -1,14 +1,25 @@
-import LoginForm from '../../components/auth/LoginForm';
+import Image from "next/image";
+import LoginForm from "../../components/auth/LoginForm";
 
 export default function Login() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
+    <div className="flex w-screen h-screen">
+      <div className="bg-[#f5f5f5] hidden lg:grid w-full lg:w-[50%]  justify-center items-center h-screen">
+        <div className="border-y-2 border-gray-300 p-4 py-8 mx-14 max-w-3xl">
+
+          <p className="text-xl font-semibold p-4 flex items-center">
+            <Image
+              src="https://firebasestorage.googleapis.com/v0/b/parts-1ffae.appspot.com/o/icons%2Fleaf.png?alt=media&token=aa41843d-e3b3-4799-89a4-072feae324e8"
+              alt="Bridik"
+              className="w-8 h-8 mr-2 block"
+              width={100}
+              height={100}
+            />
+            Bridik
+          </p>
         </div>
+      </div>{" "}
+      <div className="bg-white flex justify-center items-center w-full lg:w-[50%] h-screen">
         <LoginForm />
       </div>
     </div>

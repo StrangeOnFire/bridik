@@ -149,7 +149,7 @@ export default function UserDashboard({ user }) {
         {" "}
         {/* Industry Insights */}
         <Card className="relative z-10 p-6 rounded-3xl overflow-hidden bg-white/20">
-          <CardHeader >
+          <CardHeader>
             <CardTitle className="text-2xl   font-bold  flex items-center  gap-2  ">
               Industry Insights{" "}
               <Image

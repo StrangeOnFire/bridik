@@ -19,14 +19,7 @@ export default function ProfilePage() {
     if (!user) return;
 
     setLoading(true);
-    console.log("Sending request to analyze-skills",{
-        currentSkills: user.currentSkills,
-        careerGoals: user.careerGoals,
-        jobTitle: user.jobTitle,
-        industry: user.industry,
-        yearsOfExperience: user.yearsOfExperience,
-        educationalBackground: user.educationalBackground,
-      });
+   
     try {
       const response = await axios.post("/api/analyze-skills", {
         currentSkills: user.currentSkills,
