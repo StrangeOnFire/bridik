@@ -91,7 +91,7 @@ export default function LoginForm() {
         <p className="text-sm font-semibold leading-6 ">
           Wants demo how we actually work?
         </p>
-        <Link href="/dashboard">
+        <Link href="/demologin">
           <Button className="bg-black/60">
             Try with dummy data <ArrowRight className="ml-2 w-4 h-4 " />
           </Button>

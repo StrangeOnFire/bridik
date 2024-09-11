@@ -35,7 +35,9 @@ import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import axios from "axios";
+import ProfilePhotoUpdate from "./ProfilePhotoUpdate";
 
+// -------------------------------------------------------------------------------------------------
 export default function ProfileUpdateForm({ user }) {
   const { data: session, status, update } = useSession();
   const dispatch = useDispatch();
@@ -232,6 +234,7 @@ export default function ProfileUpdateForm({ user }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <ProfilePhotoUpdate user={user} />
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

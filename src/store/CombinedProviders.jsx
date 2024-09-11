@@ -9,7 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import store from "../store/index";
 import { setUser } from "../store/userSlice";
-
+import { Toaster } from "react-hot-toast";
 function SessionHandler({ children }) {
   const { data: sessionData } = useSession();
   const dispatch = useDispatch();
@@ -34,7 +34,7 @@ function SessionHandler({ children }) {
   }
   return (
     <>
-     
+     <Toaster />
       <main className="flex-grow">{children}</main>
     
     </>

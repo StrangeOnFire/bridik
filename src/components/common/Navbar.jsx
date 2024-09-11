@@ -54,8 +54,8 @@ export default function Navbar() {
           {status === "authenticated" ? (
             <>
               <span className="hidden md:inline">
-                Welcome, {user?.fullName }!
-              </span> 
+                Welcome, {user?.fullName}!
+              </span>
               <button
                 onClick={handleLogout}
                 className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-red-600 from-40% to-red-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95"
@@ -114,7 +114,7 @@ export default function Navbar() {
             Contact
           </NavLink>
           {status === "authenticated" ? (
-            <button onClick={handleLogout} className="text-red-600">
+            <button onClick={handleLogout} className="text-red-600 ml-4">
               Logout
             </button>
           ) : (

@@ -65,7 +65,8 @@ const authOptions = {
             const newUser = new User({
               email: profile.email,
               fullName: profile.name,
-              username: profile.email.split('@')[0], // Generate a username from email
+              username: profile.email.split('@')[0],
+              image: profile.picture, // Add Google profile image
               isGoogleUser: true,
               // Set default values for other required fields
               jobTitle: 'Not specified',
@@ -83,12 +84,18 @@ const authOptions = {
             user.isNewUser = true;
           } else {
             user.isNewUser = false;
+            // Update the image if it doesn't exist
+            if (!existingUser.image) {
+              existingUser.image = profile.picture;
+              await existingUser.save();
+            }
           }
           
           // Update the user object with database values
           user.id = existingUser._id.toString();
           user.fullName = existingUser.fullName;
           user.username = existingUser.username;
+          user.image = existingUser.image;
           user.jobTitle = existingUser.jobTitle;
           user.industry = existingUser.industry;
           user.yearsOfExperience = existingUser.yearsOfExperience;
@@ -111,6 +118,7 @@ const authOptions = {
         token.id = user.id;
         token.fullName = user.fullName;
         token.username = user.username;
+        token.image = user.image;
         token.jobTitle = user.jobTitle;
         token.industry = user.industry;
         token.yearsOfExperience = user.yearsOfExperience;
@@ -127,6 +135,7 @@ const authOptions = {
       session.user.id = token.id;
       session.user.fullName = token.fullName;
       session.user.username = token.username;
+      session.user.image = token.image;
       session.user.jobTitle = token.jobTitle;
       session.user.industry = token.industry;
       session.user.yearsOfExperience = token.yearsOfExperience;
