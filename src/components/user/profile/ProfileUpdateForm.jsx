@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { setUser } from "../../store/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setAnalysisResult, setUser } from "../../../store/userSlice";
 import {
   Card,
   CardContent,
@@ -32,38 +32,95 @@ import {
 import { useCallback } from "react";
 import { debounce } from "lodash";
 import { motion } from "framer-motion";
-export default function RegisterForm() {
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import axios from "axios";
+
+export default function ProfileUpdateForm({ user }) {
+  const { data: session, status, update } = useSession();
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    password: "",
     fullName: "",
     jobTitle: "",
     industry: "",
     yearsOfExperience: "",
-    educationalBackground: { degree: "", fieldOfStudy: "" },
+    educationalBackground: {
+      degree: "",
+      fieldOfStudy: "",
+    },
     currentSkills: [],
-    careerGoals: { shortTerm: "", longTerm: "" },
+    careerGoals: {
+      shortTerm: "",
+      longTerm: "",
+    },
     country: "",
   });
   const [error, setError] = useState("");
   const [usernameError, setUsernameError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      setFormData({
+        username: session.user.username || "",
+        email: session.user.email || "",
+
+        fullName: session.user.name || "",
+        jobTitle: user.jobTitle || "",
+        industry: user.industry || "",
+        yearsOfExperience: user.yearsOfExperience || "",
+        educationalBackground: {
+          degree: user.educationalBackground?.degree || "",
+          fieldOfStudy: user.educationalBackground?.fieldOfStudy || "",
+        },
+        currentSkills: user.currentSkills || [],
+        careerGoals: {
+          shortTerm: user.careerGoals?.shortTerm || "",
+          longTerm: user.careerGoals?.longTerm || "",
+        },
+        country: user.country || "",
+      });
+      setIsLoading(false);
+    } else if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, session, user]);
+
+  const handleAnalyzeSkills = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post("/api/analyze-skills", {
+        currentSkills: formData.currentSkills,
+        careerGoals: formData.careerGoals,
+        jobTitle: formData.jobTitle,
+        industry: formData.industry,
+        yearsOfExperience: formData.yearsOfExperience,
+        educationalBackground: formData.educationalBackground,
+      });
+      dispatch(setAnalysisResult(response.data));
+    } catch (error) {
+      console.error("Error fetching AI suggestions", error);
+    } finally {
+      setIsLoading(true);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => {
       // Handle nested objects
-      if (name.includes('.')) {
-        const [objectKey, nestedKey] = name.split('.');
+      if (name.includes(".")) {
+        const [objectKey, nestedKey] = name.split(".");
         return {
           ...prev,
           [objectKey]: {
             ...prev[objectKey],
-            [nestedKey]: value
-          }
+            [nestedKey]: value,
+          },
         };
       }
       // Handle non-nested fields
@@ -117,103 +174,77 @@ export default function RegisterForm() {
       setError("Please choose a different username.");
       return;
     }
-
-    // Check if email is already taken
     try {
-      const emailCheckRes = await fetch(`/api/auth/check-email?email=${encodeURIComponent(formData.email)}`);
-      const emailCheckData = await emailCheckRes.json();
-
-      if (emailCheckData.isTaken) {
-        setError("This email is already registered. Please login instead.");
-        return;
-      }
-    } catch (err) {
-      console.error("Error checking email:", err);
-      setError("An unexpected error occurred. Please try again.");
-      return;
-    }
-
-    // If email is not taken, proceed with registration
-    try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch("/api/update-profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
-        const userData = await res.json();
-        // Dispatch the setUser action to update the global state
-        dispatch(setUser(userData));
-        // Redirect to dashboard
+        // Update the user in the Redux store
+        dispatch(setUser(data));
+        // Update the session
+        await update({
+          ...session,
+          user: {
+            ...session.user,
+            ...formData,
+          },
+        });
+        await handleAnalyzeSkills();
         router.push("/dashboard");
       } else {
-        const data = await res.json();
-        setError(data.message || "An error occurred during registration");
+        setError(
+          data.message || "An error occurred while updating the profile"
+        );
       }
     } catch (err) {
-      console.error("Registration error:", err);
+      console.error("Profile update error:", err);
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
-  {
-    if (error) {
-      return (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 grid place-items-center overflow-y-scroll "
-        >
-          <motion.div
-            initial={{ scale: 0, rotate: "12.5deg" }}
-            animate={{ scale: 1, rotate: "0deg" }}
-            exit={{ scale: 0, rotate: "0deg" }}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-gradient-to-br from-red-600 to-rose-600 text-white p-6 rounded-lg w-full max-w-lg shadow-xl cursor-default relative overflow-hidden"
-          >
-            <div className="relative z-10">
-              <div className=" text-black w-16 h-16 mb-2 rounded-full text-3xl  grid place-items-center mx-auto">
-                <AlertCircle size={40} />
-              </div>
 
-              <p className="text-center mb-6">{error}</p>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => window.location.reload()}
-                  className="bg-transparent hover:bg-white/10 transition-colors text-white font-semibold w-full py-2 rounded"
-                >
-                  Clear all fields
-                </button>
-                <button
-                  onClick={() => setError("")}
-                  className="bg-white hover:opacity-90 transition-opacity text-rose-600 font-semibold w-full py-2 rounded"
-                >
-                  Understood!
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      );
-    }
+  if (isLoading) {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <Image
+          src="https://firebasestorage.googleapis.com/v0/b/parts-1ffae.appspot.com/o/icons%2Floading.png?alt=media&token=6773e6d3-199b-4ae1-babf-d2ce6c552816"
+          alt="logo"
+          className="animate-spin "
+          width={100}
+          height={100}
+        />
+      </div>
+    );
   }
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="mb-4 mt-2 sm:mt-0 sm:mb-0">
-        <CardTitle className="text-2xl font-bold">
-          Get started for free
-        </CardTitle>
+        <CardTitle className="text-2xl font-bold">Update Profile</CardTitle>
         <CardDescription>
-          Join our platform to kickstart your career journey
+          Update your profile to get the best out of our platform
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="fullName">Full Name</Label>
+                <Input
+                  id="fullName"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
@@ -227,38 +258,6 @@ export default function RegisterForm() {
                   <p className="text-sm text-red-600">{usernameError}</p>
                 )}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
             </div>
           </div>
 
@@ -416,14 +415,14 @@ export default function RegisterForm() {
             type="submit"
             className="w-full bg-gradient-to-r from-green-700 to-lime-600 font-semibold"
           >
-            {isLoading ? "Loading..." : "Create Account"}
+            {isLoading ? "Loading..." : "Update Profile"}
           </Button>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">
-          By creating an account, you agree to our Terms of Service and Privacy
-          Policy.
+          By updating your profile, your data will be automatically reanalyzed
+          to provide you with the best possible suggestions.
         </p>
       </CardFooter>
     </Card>

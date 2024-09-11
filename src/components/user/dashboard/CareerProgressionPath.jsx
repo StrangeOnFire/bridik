@@ -26,11 +26,18 @@ const convertToJSON = (careerString) => {
     })
     .filter((stage) => stage !== null);
 };
-const icons = [Briefcase, ChevronRight, Star, ChevronRight, Trophy, Star];
+const icons = [
+  Briefcase,
+  ChevronRight,
+  Star,
+  ChevronRight,
+  Trophy,
+  Star,
+  Star,
+  Star,
+];
 export default function CareerProgressionPath({ user }) {
-  const careerStages = (
-    user?.analysisResult?.careerProgressionPath
-  );
+  const careerStages = user?.analysisResult?.careerProgressionPath;
 
   return (
     <Card className="w-full h-fit">
@@ -65,7 +72,7 @@ export default function CareerProgressionPath({ user }) {
                     <h3 className="text-lg font-semibold flex items-center">
                       {stage}
                     </h3>
-                   
+
                     {index < careerStages.length - 1 && (
                       <Separator
                         orientation="vertical"
@@ -79,7 +86,9 @@ export default function CareerProgressionPath({ user }) {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="text-green-700">Be consistent and patient, your time will come.!</CardFooter>
+      <CardFooter className="text-green-700">
+        Be consistent and patient, your time will come.!
+      </CardFooter>
     </Card>
   );
 }

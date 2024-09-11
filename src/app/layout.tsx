@@ -5,7 +5,7 @@ import CombinedProviders from "../store/CombinedProviders";
 export const metadata = {
   title: "Bridik",
   description:
-    "Bridik.in is an AI-driven platform designed to help individuals enhance their skills and advance their careers. Discover personalized learning paths, access resources, and close skill gaps to achieve your professional goals.",
+    "A personalized AI learning tool that identifies skills gaps based on your current job or desired career path. It provides a tailored learning plan, recommends courses, and tracks progress over time.",
     icons: {
       icon: "/logo.png",
     },

@@ -24,6 +24,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.5.2",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.439.0",
     "mongodb": "^6.8.1",
     "mongoose": "^8.6.1",

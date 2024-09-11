@@ -155,7 +155,7 @@ export const SidebarLink = ({ link, className, ...props }) => {
     </Link>
   );
 };
-export const SidebarLogout = ({  className, ...props }) => {
+export const SidebarLogout = ({ className, ...props }) => {
   const { open, animate } = useSidebar();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -181,7 +181,7 @@ export const SidebarLogout = ({  className, ...props }) => {
         }}
         className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
       >
-       Logout
+        Logout
       </motion.span>
     </div>
   );

@@ -15,10 +15,11 @@ function SessionHandler({ children }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   useEffect(() => {
+    console.log(user);
     if (sessionData?.user?.email && !user.fullName) {
       fetchUser();
     }
-  }, []);
+  }, [sessionData, user]);
 
   async function fetchUser() {
     try {

@@ -21,6 +21,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAnalysisResult } from "@/store/userSlice";
 import Loading from "./loading";
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // ---------------------------------------------------------------------------------
 export default function UserSidebar({ children }) {
@@ -28,34 +30,33 @@ export default function UserSidebar({ children }) {
   const links = [
     {
       label: "Dashboard",
-      href: "#",
+      href: "/dashboard",
       icon: (
         <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
       label: "Profile",
-      href: "#",
+      href: "/dashboard/profile",
       icon: (
         <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
-    {
-      label: "Settings",
-      href: "#",
-      icon: (
-        <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
+    // {
+    //   label: "Settings",
+    //   href: "#",
+    //   icon: (
+    //     <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+    //   ),
+    // },
   ];
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user);
+  const { data: session, status } = useSession();
 
   const handleAnalyzeSkills = async () => {
-    if (!user) return;
-
     setLoading(true);
 
     try {
@@ -68,7 +69,6 @@ export default function UserSidebar({ children }) {
         educationalBackground: user.educationalBackground,
       });
       dispatch(setAnalysisResult(response.data));
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching AI suggestions", error);
     } finally {
@@ -77,15 +77,20 @@ export default function UserSidebar({ children }) {
   };
 
   useEffect(() => {
-    if (!user?.loggedIn === false) {
-      router.push("/");
-    }
-    if (user?.analysisResult === null && user?.currentSkills?.length > 0) {
-      setTimeout(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else if (status === "authenticated") {
+      if (session.user.jobTitle === "Not specified") {
+        // Redirect new Google users to a profile completion page
+        router.push("/dashboard/profile");
+      } else if (
+        user?.analysisResult === null &&
+        user?.currentSkills?.length > 0
+      ) {
         handleAnalyzeSkills();
-      }, 1000);
+      }
     }
-  }, [user]);
+  }, [status, session, user]);
 
   return (
     <div
@@ -100,7 +105,11 @@ export default function UserSidebar({ children }) {
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
-                <SidebarLink key={idx} link={link} />
+                <SidebarLink
+                  key={idx}
+                  link={link}
+                  onClick={() => setOpen(false)}
+                />
               ))}
               <SidebarLogout />
             </div>
@@ -108,16 +117,18 @@ export default function UserSidebar({ children }) {
           <div>
             <SidebarLink
               link={{
-                label: "Manu Arora",
+                label: user?.fullName || session?.user?.fullName || "",
                 href: "#",
                 icon: (
-                  <Image
-                    src="https://assets.aceternity.com/manu.png"
-                    className="h-7 w-7 flex-shrink-0 rounded-full"
-                    width={50}
-                    height={50}
-                    alt="Avatar"
-                  />
+                  <Avatar className="w-7 h-7">
+                    <AvatarImage src={user?.image || ""} alt={user?.fullName} />
+                    <AvatarFallback className="bg-zinc-700 text-white text-xs">
+                      {user?.fullName
+                        ?.split(" ")
+                        ?.map((n) => n[0])
+                        ?.join("")}
+                    </AvatarFallback>
+                  </Avatar>
                 ),
               }}
             />

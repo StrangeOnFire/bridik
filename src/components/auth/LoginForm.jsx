@@ -34,29 +34,32 @@ export default function LoginForm() {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
-    if (result.error) {
-      setError(result.error);
-    } else {
-      // Fetch user data after successful login
-      try {
-        const res = await fetch("/api/user");
-        if (res.ok) {
-          const userData = await res.json();
-          dispatch(setUser(userData));
-          router.push("/dashboard");
+    
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result.error) {
+        // Handle specific errors
+        if (result.error === "No user found with this email") {
+          setError("No account found with this email. Please check your email or sign up.");
+        } else if (result.error === "Invalid password") {
+          setError("Incorrect password. Please try again.");
         } else {
-          setError("Failed to fetch user data");
+          setError(result.error || "An unexpected error occurred");
         }
-      } catch (err) {
-        setError("An unexpected error occurred");
+      } else {
+        // Successful login
+        router.push("/dashboard");
       }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleGoogleSignIn = async () => {

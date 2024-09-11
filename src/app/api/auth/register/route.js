@@ -45,7 +45,11 @@ export async function POST(req) {
       country 
     });
 
-    return NextResponse.json({ message: 'User created successfully', userId: user._id }, { status: 201 });
+    // Create a sanitized user object without the password
+    const sanitizedUser = user.toObject();
+    delete sanitizedUser.password;
+
+    return NextResponse.json(sanitizedUser, { status: 201 });
   } catch (error) {
     console.error('Registration error:', error);
     return NextResponse.json({ message: 'An error occurred during registration' }, { status: 500 });

@@ -21,27 +21,27 @@ const UserSchema = new mongoose.Schema(
     // Basic Information
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: String,
     fullName: { type: String, required: true },
 
     // Professional Information
-    jobTitle: { type: String },
-    industry: { type: String },
-    yearsOfExperience: { type: Number },
+    jobTitle: { type: String, default: "Not specified" },
+    industry: { type: String, default: "Not specified" },
+    yearsOfExperience: { type: Number, default: 0 },
     educationalBackground: {
-      degree: { type: String },
-      fieldOfStudy: { type: String },
+      degree: { type: String, default: "Not specified" },
+      fieldOfStudy: { type: String, default: "Not specified" },
     },
 
     // Skill Information
-    currentSkills: [{ type: String }],
+    currentSkills: [String],
     careerGoals: {
-      shortTerm: { type: String },
-      longTerm: { type: String },
+      shortTerm: { type: String, default: "Not specified" },
+      longTerm: { type: String, default: "Not specified" },
     },
 
     // Location
-    country: { type: String },
+    country: { type: String, default: "Not specified" },
 
     // Additional fields
     image: String,
@@ -53,6 +53,7 @@ const UserSchema = new mongoose.Schema(
       type: AnalysisResultSchema,
       default: null,
     },
+    isGoogleUser: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

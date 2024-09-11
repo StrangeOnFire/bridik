@@ -46,14 +46,67 @@ const authOptions = {
             country: user.country,
           };
         } catch (error) {
-          console.error('Error in authorize function:', error);
-          throw new Error('Internal server error');
+          // Instead of throwing a generic error, we'll throw the specific error message
+          throw new Error(error.message);
         }
       }
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account, profile }) {
+      if (account.provider === 'google') {
+        await dbConnect();
+        
+        try {
+          let existingUser = await User.findOne({ email: profile.email });
+          
+          if (!existingUser) {
+            // Create a new user without password for Google authentication
+            const newUser = new User({
+              email: profile.email,
+              fullName: profile.name,
+              username: profile.email.split('@')[0], // Generate a username from email
+              isGoogleUser: true,
+              // Set default values for other required fields
+              jobTitle: 'Not specified',
+              industry: 'Not specified',
+              yearsOfExperience: 0,
+              educationalBackground: { degree: 'Not specified', fieldOfStudy: 'Not specified' },
+              currentSkills: [],
+              careerGoals: { shortTerm: 'Not specified', longTerm: 'Not specified' },
+              country: 'Not specified',
+              // Set a flag to indicate this is a Google-authenticated user
+              isGoogleUser: true,
+              password: 'googlesigninn'  // Explicitly set password to undefined for Google users
+            });
+            existingUser = await newUser.save();
+            user.isNewUser = true;
+          } else {
+            user.isNewUser = false;
+          }
+          
+          // Update the user object with database values
+          user.id = existingUser._id.toString();
+          user.fullName = existingUser.fullName;
+          user.username = existingUser.username;
+          user.jobTitle = existingUser.jobTitle;
+          user.industry = existingUser.industry;
+          user.yearsOfExperience = existingUser.yearsOfExperience;
+          user.educationalBackground = existingUser.educationalBackground;
+          user.currentSkills = existingUser.currentSkills;
+          user.careerGoals = existingUser.careerGoals;
+          user.country = existingUser.country;
+          user.isGoogleUser = existingUser.isGoogleUser;
+          
+          return true;
+        } catch (error) {
+          console.error('Error during Google sign in:', error);
+          return false;
+        }
+      }
+      return true;
+    },
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
         token.fullName = user.fullName;
@@ -65,6 +118,8 @@ const authOptions = {
         token.currentSkills = user.currentSkills;
         token.careerGoals = user.careerGoals;
         token.country = user.country;
+        token.isNewUser = user.isNewUser;
+        token.isGoogleUser = user.isGoogleUser;
       }
       return token;
     },
@@ -79,6 +134,8 @@ const authOptions = {
       session.user.currentSkills = token.currentSkills;
       session.user.careerGoals = token.careerGoals;
       session.user.country = token.country;
+      session.user.isNewUser = token.isNewUser;
+      session.user.isGoogleUser = token.isGoogleUser;
       return session;
     },
     async redirect({ url, baseUrl }) {

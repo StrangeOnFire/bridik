@@ -13,6 +13,7 @@ export async function POST(req) {
     await dbConnect();
     const session = await getServerSession();
     if (!session || !session.user || !session.user.email) {
+      console.log(session);
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -102,7 +103,7 @@ export async function POST(req) {
     }
 
     await client.close();
-
+    console.log(serializableResponse);
     return NextResponse.json(serializableResponse);
   } catch (error) {
     return NextResponse.json(
