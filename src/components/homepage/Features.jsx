@@ -48,7 +48,7 @@ export default function Features() {
               <div className="flex flex-col h-full justify-center px-4 sm:px-10 p-10 bg-white/10 rounded-2xl">
                 <FeatureCard
                   title="AI-Powered Skill Gap Analysis"
-                  description="Get real-time feedback on where you stand with your current skills and what's missing to reach your short- and long-term goals. Our AI does the heavy lifting to identify exactly what you need."
+                  description="Get real-time feedback on where you stand with your current skills and what&apos;s missing to reach your short- and long-term goals. Our AI does the heavy lifting to identify exactly what you need."
                 />
               </div>
             </div>
@@ -56,7 +56,7 @@ export default function Features() {
               <div className="mb-6 px-4 sm:px-10 p-10 bg-white/10 rounded-2xl">
                 <FeatureCard
                   title="Actionable Steps for Growth"
-                  description="We provide clear, personalized steps to improve your skills and close the gaps. Whether it's upskilling or taking on new projects, you'll always know the next move."
+                  description="We provide clear, personalized steps to improve your skills and close the gaps. Whether it&apos;s upskilling or taking on new projects, you&apos;ll always know the next move."
                 />
               </div>
               <div className="px-4 sm:px-10 p-10 bg-white/10 rounded-2xl">
