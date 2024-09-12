@@ -8,7 +8,7 @@ export default function HowToUse() {
       content: (
         <div>
           <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
-            Create your account in minutes. It's free and easy to get started!
+            Create your account in minutes. It&apos;s free and easy to get started!
           </p>
         </div>
       ),
