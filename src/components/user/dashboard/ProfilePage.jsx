@@ -39,51 +39,17 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-4">Your Profile</h1>
+    <div className="pl-4 pt-2">
 
       <button
         onClick={handleAnalyzeSkills}
-        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+        className="text-blue-600 font-[500] hover:text-blue-700 text-sm"
         disabled={loading || !user}
       >
-        {loading ? "Analyzing..." : "Analyze Skills"}
+        {loading ? "Analyzing..." : "Want to analyze again? Click here!"}
       </button>
 
-      {analysisResult && (
-        <div className="mt-6">
-          <p>
-            Skills required for short-term goal:{" "}
-            {analysisResult.skillsForShortTerm.join(", ")}
-          </p>
-          <p>
-            Skills required for long-term goal:{" "}
-            {analysisResult.skillsForLongTerm.join(", ")}
-          </p>
-          <h2 className="text-xl font-bold">Skill Readiness</h2>
-        <p>short term readiness: {analysisResult.shortTermReadiness}</p>
-        <p>long term readiness: {analysisResult.longTermReadiness}</p>
-
-          <h3 className="mt-4 font-semibold">
-            Actionable Steps for Short-Term:
-          </h3>
-          <p>{analysisResult.stepsForShortTerm}</p>
-
-          <h3 className="mt-4 font-semibold">
-            Actionable Steps for Long-Term:
-          </h3>
-          <p>{analysisResult.stepsForLongTerm}</p>
-
-          <h3 className="mt-4 font-semibold">Industry Recommendations:</h3>
-          <p>{analysisResult.industryRecommendations}</p>
-
-          <h3 className="mt-4 font-semibold">Career Progression Path:</h3>
-          <p>{analysisResult.careerProgressionPath}</p>
-
-          <h3 className="mt-4 font-semibold">Recommended Courses or Certifications:</h3>
-         
-        </div>
-      )}
+      
     </div>
   );
 }

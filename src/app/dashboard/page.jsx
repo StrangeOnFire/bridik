@@ -5,6 +5,7 @@ import UserDashboard from "@/components/user/dashboard/UserDashboard";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Loading from "./loading";
+import ProfilePage from "@/components/user/dashboard/ProfilePage";
 export default function Page() {
   const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
@@ -23,6 +24,7 @@ export default function Page() {
         Unlock your potential and boost your career.
       </p>
       <Banner />
+      <ProfilePage user={user} />
       <UserDashboard user={user} />
     </div>
   );
@@ -33,7 +35,7 @@ function Banner() {
   return (
     <div className="relative mb-4 sm:mb-0 bg-gradient-to-r from-green-700 to-lime-600  px-6 py-4  sm:px-3.5 text-white rounded-lg flex justify-around items-center flex-col sm:flex-row">
       <p className="text-sm font-semibold leading-6 ">
-        Want to Analyze again or update your info?
+       Keep your profile updated to get the best out of our platform!
       </p>
 
       <div
