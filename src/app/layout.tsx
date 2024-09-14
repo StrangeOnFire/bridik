@@ -12,22 +12,22 @@ export const metadata = {
     openGraph: {
       title: "Bridik",
       description: "Bridik.in is an AI-driven platform designed to help individuals enhance their skills and advance their careers.",
-      // images: [
-      //   {
-      //     url: "/fiveout-og-image.png", // Replace with your actual image file name
-      //     width: 1200,
-      //     height: 630,
-      //     alt: "Bridik - Bri",
-      //   },
-      // ],
+      images: [
+        {
+          url: "/bridik-image.png", 
+          width: 1200,
+          height: 630,
+          alt: "Bridik",
+        },
+      ],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: "Bridik",
       description: "Bridik.in is an AI-driven platform designed to help individuals enhance their skills and advance their careers. ",
-      // images: ["/fiveout-og-image.png"], // Replace with your actual image file name
-    },
+      images: ["/bridik-image.png"], 
+  },
 };
 
 export default async function RootLayout({

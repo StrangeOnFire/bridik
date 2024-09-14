@@ -30,7 +30,7 @@ const Newsletter = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white text-black p-4">
+    <div className="min-h-screen flex items-center justify-center bg-white text-black p-4" id="newsletter">
       <div className="w-full max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">

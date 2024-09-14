@@ -43,9 +43,9 @@ export default function Navbar() {
     <nav className="glass-nav fixed left-0 right-0 top-0 z-[9999] mx-auto max-w-6xl overflow-hidden bg-[#ecefec] backdrop-blur md:left-6 md:right-6 md:top-6 md:rounded-2xl">
       <div className="glass-nav flex items-center justify-between px-5 py-2 sm:py-4">
         <div className="hidden items-center gap-2 md:flex">
-          <NavLink href="#">Products</NavLink>
-          <NavLink href="#">About</NavLink>
-          <NavLink href="#">Feedback</NavLink>
+          {/* <NavLink href="#">Products</NavLink> */}
+          {/* <NavLink href="#">About</NavLink> */}
+          <NavLink href="#newsletter">Newsletter</NavLink>
         </div>
         <span className="pointer-events-none relative left-0 top-[50%] z-10 text-3xl sm:text-4xl font-[700] sm:font-black text-black  md:absolute md:left-[50%] md:-translate-x-[50%] md:-translate-y-[50%]">
           Bridik
@@ -104,14 +104,17 @@ export default function Navbar() {
         }`}
       >
         <div className="flex flex-col items-start gap-4 px-4 pb-4">
-          <NavLink href="#" onClick={closeMenu}>
-            Products
-          </NavLink>
-          <NavLink href="#" onClick={closeMenu}>
-            History
-          </NavLink>
-          <NavLink href="#" onClick={closeMenu}>
+            {/* <NavLink href="#" onClick={closeMenu}>
+              Products
+            </NavLink>
+            <NavLink href="#" onClick={closeMenu}>
+              History
+            </NavLink> */}
+          {/* <NavLink href="#" onClick={closeMenu}>
             Contact
+          </NavLink> */}
+          <NavLink href="#newsletter" onClick={closeMenu}>
+            Newsletter
           </NavLink>
           {status === "authenticated" ? (
             <button onClick={handleLogout} className="text-red-600 ml-4">
